@@ -33,6 +33,23 @@ module.exports = db => {
           console.log(err);
           res.status(500).end();
         })
+    },
+    addExercise: (req, res) => {
+      db.Workout.update(
+        {
+          "_id": req.params.id
+        },
+        {
+          $push: {
+            exercises: req.body
+          }
+        }
+      )
+        .then(data => res.json(data))
+        .catch(err => {
+          console.log(err);
+          res.status(500).end();
+        })
     }
   }
 };

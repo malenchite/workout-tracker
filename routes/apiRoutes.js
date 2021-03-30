@@ -5,6 +5,7 @@ module.exports = db => {
 
   router.get("/workouts", WorkoutController.getWorkouts);
   router.post("/workouts", WorkoutController.createWorkout);
+  router.put("/workouts/:id", WorkoutController.addExercise);
 
   return router;
 }
