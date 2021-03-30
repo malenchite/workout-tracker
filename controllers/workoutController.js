@@ -1,9 +1,19 @@
 module.exports = db => {
   return {
-    // Get all workouts
+    // Get all workouts with aggregated duration
     getWorkouts: (req, res) => {
-      db.Workout.find({})
-        .sort({ day: 1 })
+      db.Workout.aggregate([
+        {
+          $sort: { day: 1 }
+        },
+        {
+          $addFields: {
+            totalDuration: {
+              $sum: ["$exercises.duration"]
+            }
+          }
+        }
+      ])
         .then(data => {
           res.json(data);
         })
