@@ -148,8 +148,15 @@ function populateChart(data) {
     options: {
       title: {
         display: true,
-        text: 'Duration by Exercise Performed',
+        text: 'Duration by Exercise Performed (minutes)',
       },
+      tooltips: {
+        callbacks: {
+          label: function (tooltipItem, data) {
+            return `${data.labels[tooltipItem.index]}: ${data.datasets[0].data[tooltipItem.index]} minutes`;
+          }
+        }
+      }
     },
   });
 
@@ -168,8 +175,15 @@ function populateChart(data) {
     options: {
       title: {
         display: true,
-        text: 'Weight by Exercise Performed',
+        text: 'Weight by Exercise Performed (pounds)',
       },
+      tooltips: {
+        callbacks: {
+          label: function (tooltipItem, data) {
+            return `${data.labels[tooltipItem.index]}: ${data.datasets[0].data[tooltipItem.index]} pounds`;
+          }
+        }
+      }
     },
   });
 }
