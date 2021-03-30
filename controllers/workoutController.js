@@ -20,7 +20,7 @@ module.exports = db => {
         .catch(err => {
           console.log(err);
           res.status(500).end();
-        })
+        });
     },
     createWorkout: (req, res) => {
       db.Workout.create(
@@ -32,7 +32,7 @@ module.exports = db => {
         .catch(err => {
           console.log(err);
           res.status(500).end();
-        })
+        });
     },
     addExercise: (req, res) => {
       db.Workout.update(
@@ -49,7 +49,31 @@ module.exports = db => {
         .catch(err => {
           console.log(err);
           res.status(500).end();
+        });
+    },
+    getWorkoutsInRange: (req, res) => {
+      db.Workout.aggregate([
+        {
+          $sort: { day: -1 },
+        },
+        {
+          $limit: 7
+        },
+        {
+          $addFields: {
+            totalDuration: {
+              $sum: ["$exercises.duration"]
+            }
+          }
+        }
+      ])
+        .then(data => {
+          res.json(data);
         })
+        .catch(err => {
+          console.log(err);
+          res.status(500).end();
+        });
     }
   }
 };
