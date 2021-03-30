@@ -23,18 +23,19 @@ const WorkoutSchema = new Schema({
     },
     weight: {
       type: Number,
-      required: true,
       validate: [num => num > 0, "Weight must be >0"]
     },
     reps: {
       type: Number,
-      required: true,
       validate: [num => num > 0, "Reps must be >0"]
     },
     sets: {
       type: Number,
-      required: true,
       validate: [num => num > 0, "Sets must be >0"]
+    },
+    distance: {
+      type: Number,
+      validate: [num => num > 0, "Distance must be >0"]
     }
   }]
 });
