@@ -60,6 +60,9 @@ module.exports = db => {
           $limit: 7
         },
         {
+          $sort: { day: 1 },
+        },
+        {
           $addFields: {
             totalDuration: {
               $sum: ["$exercises.duration"]
