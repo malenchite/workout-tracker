@@ -22,9 +22,10 @@ function generatePalette() {
 }
 
 function populateChart(data) {
-  let durations = data.map(({ totalDuration }) => totalDuration);
-  let pounds = calculateTotalWeight(data);
-  let workouts = workoutNames(data);
+  const durations = data.map(({ totalDuration }) => totalDuration);
+  const totalWeight = calculateTotalWeight(data);
+  const { durationTypes, durationsByType } = getDurationByType(data);
+  const { weightTypes, weightsByType } = getWeightByType(data);
   const colors = generatePalette();
 
   let line = document.querySelector('#canvas').getContext('2d');
@@ -94,7 +95,7 @@ function populateChart(data) {
       datasets: [
         {
           label: 'Pounds',
-          data: pounds,
+          data: totalWeight,
           backgroundColor: [
             'rgba(255, 99, 132, 0.2)',
             'rgba(54, 162, 235, 0.2)',
@@ -135,19 +136,19 @@ function populateChart(data) {
   let pieChart = new Chart(pie, {
     type: 'pie',
     data: {
-      labels: workouts,
+      labels: durationTypes,
       datasets: [
         {
           label: 'Exercises Performed',
           backgroundColor: colors,
-          data: durations,
+          data: durationsByType,
         },
       ],
     },
     options: {
       title: {
         display: true,
-        text: 'Exercises Performed',
+        text: 'Duration by Exercise Performed',
       },
     },
   });
@@ -155,19 +156,19 @@ function populateChart(data) {
   let donutChart = new Chart(pie2, {
     type: 'doughnut',
     data: {
-      labels: workouts,
+      labels: weightTypes,
       datasets: [
         {
           label: 'Exercises Performed',
           backgroundColor: colors,
-          data: pounds,
+          data: weightsByType,
         },
       ],
     },
     options: {
       title: {
         display: true,
-        text: 'Exercises Performed',
+        text: 'Weight by Exercise Performed',
       },
     },
   });
@@ -191,17 +192,44 @@ function calculateTotalWeight(data) {
   return totals;
 }
 
-function workoutNames(data) {
-  let workouts = [];
+// Get durations for each exercise type, return list of types and associated durations
+function getDurationByType(data) {
+  let durationTypes = [];
+  let durationsByType = [];
 
-  data.forEach((workout) => {
-    workout.exercises.forEach((exercise) => {
-      workouts.push(exercise.name);
+  data.forEach(workout => {
+    workout.exercises.forEach(exercise => {
+      if (durationTypes.includes(exercise.name)) {
+        durationsByType[durationTypes.indexOf(exercise.name)] += exercise.duration;
+      } else {
+        durationTypes.push(exercise.name);
+        durationsByType.push(exercise.duration);
+      }
     });
   });
 
-  // return de-duplicated array with JavaScript `Set` object
-  return [...new Set(workouts)];
+  return { durationTypes, durationsByType };
+}
+
+// Get weights for each exercise type, return list of types and associated weights
+function getWeightByType(data) {
+  let weightTypes = [];
+  let weightsByType = [];
+
+  data.forEach(workout => {
+    workout.exercises.forEach(exercise => {
+      if (exercise.type === 'resistance') {
+        if (weightTypes.includes(exercise.name)) {
+          weightsByType[weightTypes.indexOf(exercise.name)] += exercise.weight;
+        } else {
+          weightTypes.push(exercise.name);
+          weightsByType.push(exercise.weight);
+        }
+      }
+    });
+  });
+
+  return { weightTypes, weightsByType };
 }
 
 // get all workout data from back-end
