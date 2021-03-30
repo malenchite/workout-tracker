@@ -23,6 +23,9 @@ app.use(express.static("public"));
 // API routing
 app.use("/api", require("./routes/apiRoutes")(db));
 
+// HTML routing
+app.use("/", require("./routes/htmlRoutes")());
+
 // Start the server
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);

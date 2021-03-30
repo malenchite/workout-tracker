@@ -21,6 +21,18 @@ module.exports = db => {
           console.log(err);
           res.status(500).end();
         })
+    },
+    createWorkout: (req, res) => {
+      db.Workout.create(
+        {
+          day: Date.now(),
+          exercises: []
+        })
+        .then(data => res.json(data))
+        .catch(err => {
+          console.log(err);
+          res.status(500).end();
+        })
     }
   }
 };
