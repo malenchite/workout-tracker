@@ -13,7 +13,9 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/workout", {
   useUnifiedTopology: true,
   useCreateIndex: true,
   useFindAndModify: false
-});
+})
+  .then(() => console.log("MongoDB connected successfully"))
+  .catch((err) => console.log(err));
 
 // Logging
 app.use(logger("dev"));
